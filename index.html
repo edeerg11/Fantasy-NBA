@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy</title>
+    <link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="title">
+            <h1>Fantasy draft</h1>
+        </div>
+                        <button type="button" id="reset">Reiniciar draft</button>
+    </header>
+    <main>
+        <div id="fila-principal">
+            <section id="lineup">
+                <div class="lineup-head">
+                    <h2>Tu quinteto</h2>
+                    <span id="free-slots"></span>
+                    <span id="team-score"></span>
+                </div>
+                <div id="court">
+                    <div class="court-line court-border" aria-hidden="true"></div>
+                    <div class="court-line court-arc" aria-hidden="true"></div>
+                    <div class="court-line court-paint" aria-hidden="true"></div>
+                    <div class="court-line court-ft" aria-hidden="true"></div>
+                    <div class="court-line court-rim" aria-hidden="true"></div>
+                    <div class="court-line court-center" aria-hidden="true"></div>
+                    <div data-slot="C">
+                        <span class="slot-circle">C</span>
+                        <span class="slot-label"></span>
+                    </div>
+                    <div data-slot="PF">
+                        <span class="slot-circle">PF</span>
+                        <span class="slot-label"></span>
+                    </div>
+                    <div data-slot="SF">
+                        <span class="slot-circle">SF</span>
+                        <span class="slot-label"></span>
+                    </div>
+                    <div data-slot="SG">
+                        <span class="slot-circle">SG</span>
+                        <span class="slot-label"></span>
+                    </div>
+                    <div data-slot="PG">
+                        <span class="slot-circle">PG</span>
+                        <span class="slot-label"></span>
+                    </div>
+
+                </div>
+                <section class="scoreboard">
+                    <div class="cell">
+                        <span class="cell-label">Restante</span>
+                        <div id="budget-remaining"></div>
+                    </div>
+                    <div class="cell">
+                        <span class="cell-label">Gastado</span>
+                        <div id="budget-spent"></div>
+                    </div>
+                    <div class="cell">
+                        <span class="cell-label">Fichados</span>
+                        <div id="drafted-count"></div>
+                    </div>
+                    <div class="budget-track">
+                        <div id="budget-bar"></div>
+                    </div>
+                </section>
+
+            </section>
+            <section id="market">
+                <h2>Mercado</h2>
+                <div id="toolbar">
+                    <label for="search">Buscar jugador</label>
+                    <input type="search" id="search" placeholder="Nombre o equipo">
+
+                    <div id="filters">
+                        <button type="button" data-filter="all" aria-pressed="true">Todos</button>
+                        <button type="button" data-filter="G" aria-pressed="false">G</button>
+                        <button type="button" data-filter="F" aria-pressed="false">F</button>
+                        <button type="button" data-filter="C" aria-pressed="false">C</button>
+                    </div>
+                    <button type="button" id="reroll"></button>
+
+                </div>
+
+                <div id="table-cage">
+                    <div class="table-row table-head">
+                        <span>Jugador</span>
+                        <span>Pos</span>
+                        <span>Eq.</span>
+                        <span>Punt.</span>
+                        <span>Precio</span>
+                        <span>Nivel</span>
+                        <span></span>
+                    </div>
+                    <div id="players">
+
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+    </main>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

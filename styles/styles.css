@@ -1,0 +1,562 @@
+/* =========================================================
+   1. BASE
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px 16px;
+    background: #EEF1F4;
+    color: #12161C;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================================================
+   2. LAYOUT GENERAL
+   ========================================================= */
+header,
+main,
+footer {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+}
+
+/* =========================================================
+   3. CABECERA
+   .title a la izquierda, marcador a la derecha
+   ========================================================= */
+header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #12161C;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   4. MARCADOR
+   ========================================================= */
+.scoreboard {
+    flex: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    background: #12161C;
+    border-radius: 10px;
+    overflow: hidden;
+    padding-bottom: 1em;
+}
+
+/* Las tres celdas: Restante, Gastado, Fichados */
+.cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 18px;
+}
+
+.cell+.cell {
+    border-left: 1px solid #2A2F37;
+}
+
+/* Etiqueta pequeña de cada celda */
+.cell-label {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9AA3AE;
+}
+
+/* Cifra grande de cada celda */
+#budget-remaining,
+#budget-spent,
+#drafted-count {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 34px;
+    font-weight: bold;
+    line-height: 1;
+    color: #FFFFFF;
+}
+
+#budget-remaining {
+    color: #FFB020;
+}
+
+/* Contenedor de la barra */
+.budget-track {
+    grid-column: 1 / -1;
+    height: 10px;
+    margin: 12px 18px 0;
+    background: #2A2F37;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#budget-bar {
+    height: 100%;
+    width: 0;
+    background: #FFB020;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* =========================================================
+   5. FILA PRINCIPAL
+   ========================================================= */
+#fila-principal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 24px;
+    width: 100%;
+    flex-grow: 1;
+}
+
+#lineup,
+#market {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#lineup {
+    flex: 2 1 380px;
+}
+
+#market {
+    flex: 3 1 560px;
+    min-width: 0;
+}
+
+/* Cabecera de la pista: título y "x puestos libres" */
+.lineup-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+}
+
+h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+#free-slots {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: #4E5764;
+}
+
+/* =========================================================
+   6. PISTA Y RANURAS
+   ========================================================= */
+#court {
+    position: relative;
+    background: #1D3FAF;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 1 / 0.95;
+}
+
+/* Líneas de la pista (decoración) */
+.court-line {
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+}
+
+/* Contorno */
+.court-border {
+    inset: 14px;
+    border-radius: 4px;
+}
+
+/* Arco de triple: círculo con el centro en la línea de fondo */
+.court-arc {
+    left: 50%;
+    top: 14px;
+    width: 86%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Zona (la "pintura") */
+.court-paint {
+    left: 50%;
+    top: 14px;
+    width: 32%;
+    height: 40%;
+    transform: translateX(-50%);
+    border-top: 0;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Círculo de tiro libre, al final de la zona */
+.court-ft {
+    left: 50%;
+    top: calc(14px + 40%);
+    width: 22%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Aro */
+.court-rim {
+    left: 50%;
+    top: 9%;
+    width: 18px;
+    height: 18px;
+    border: 3px solid #FF8A3D;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Círculo central: medio círculo en la línea de abajo */
+.court-center {
+    left: 50%;
+    top: calc(100% - 14px);
+    width: 30%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+[data-slot] {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    z-index: 1;
+}
+
+[data-slot="C"] {
+    left: 50%;
+    top: 27%;
+}
+
+[data-slot="PF"] {
+    left: 19%;
+    top: 30%;
+}
+
+[data-slot="SF"] {
+    left: 81%;
+    top: 32%;
+}
+
+[data-slot="SG"] {
+    left: 78%;
+    top: 68%;
+}
+
+[data-slot="PG"] {
+    left: 36%;
+    top: 76%;
+}
+
+/* Círculo con la sigla */
+.slot-circle {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #FFFFFF;
+    color: #12161C;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 17px;
+    font-weight: bold;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.slot-label {
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: #12161C;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* Ranura vacía (clase que añade JS) */
+.is-empty .slot-circle {
+    background: transparent;
+    border: 2px dashed rgba(255, 255, 255, 0.9);
+    color: #FFFFFF;
+    box-shadow: none;
+}
+
+.is-empty .slot-label {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+#reset {
+    align-self: flex-start;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 2px solid #12161C;
+    border-radius: 8px;
+    background: transparent;
+    color: #12161C;
+    font-weight: bold;
+}
+
+#reset:hover {
+    background: #12161C;
+    color: #FFFFFF;
+}
+
+/* =========================================================
+   7. BARRA DE HERRAMIENTAS
+   label encima del input, filtros a la derecha
+   ========================================================= */
+#toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    column-gap: 10px;
+    row-gap: 6px;
+}
+
+#toolbar label {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 13px;
+    font-weight: bold;
+    color: #4E5764;
+}
+
+#search {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 2px solid #C3CAD2;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #12161C;
+}
+
+#search:focus {
+    outline: none;
+    border-color: #1D3FAF;
+}
+
+#filters {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    border: 2px solid #12161C;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#filters button {
+    min-height: 44px;
+    min-width: 48px;
+    padding: 0 12px;
+    border: 0;
+    background: #FFFFFF;
+    color: #12161C;
+    font-weight: bold;
+}
+
+#filters button+button {
+    border-left: 2px solid #12161C;
+}
+
+#filters button[aria-pressed="true"] {
+    background: #12161C;
+    color: #FFFFFF;
+}
+
+/* =========================================================
+   8. TABLA
+   ========================================================= */
+#table-cage {
+    flex-grow: 1;
+    min-height: 0;
+    overflow: auto;
+    background: #FFFFFF;
+    border: 2px solid #12161C;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 2.2fr)
+        minmax(0, 0.5fr)
+        minmax(0, 0.6fr)
+        minmax(0, 0.6fr)
+        minmax(0, 0.7fr)
+        minmax(0, 1.1fr)
+        140px;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 16px;
+    border-bottom: 1px solid #E2E6EA;
+}
+
+.table-row span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Fila de cabecera (la escrita en el HTML) */
+.table-head {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #12161C;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4E5764;
+}
+
+#players {
+    flex: 1;
+    display: grid;
+    grid-template-rows: repeat(8, minmax(0, 1fr));
+}
+
+/* Botones de las filas (los genera JS) */
+#players button {
+    min-height: 34px;
+    width: 100%;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 8px;
+    background: #1D3FAF;
+    color: #FFFFFF;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#players button.is-release {
+    background: #FFFFFF;
+    border: 2px solid #1D3FAF;
+    color: #1D3FAF;
+}
+
+#players button:disabled {
+    background: #F4F6F8;
+    border: 2px dashed #B7BEC7;
+    color: #5B6470;
+    cursor: not-allowed;
+    font-size: 13px;
+}
+
+/* =========================================================
+   10. MÓVIL
+   ========================================================= */
+@media (max-width: 640px) {
+    body {
+        padding: 16px;
+        gap: 20px;
+    }
+
+    #budget-remaining,
+    #budget-spent,
+    #drafted-count {
+        font-size: 26px;
+    }
+
+    .cell {
+        padding: 12px;
+    }
+
+    /* Pista cuadrada en vez de estirada */
+    #court {
+        flex-grow: 0;
+        min-height: 0;
+        aspect-ratio: 1 / 1;
+    }
+
+    .slot-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+
+    .slot-label {
+        max-width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 11px;
+    }
+
+    /* Buscador y filtros a todo el ancho */
+    #toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    #filters {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    #filters button {
+        flex: 1;
+    }
+
+    /* La tabla hace scroll horizontal dentro de su caja */
+    #table-cage {
+        flex-grow: 0;
+    }
+}
